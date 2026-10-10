@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+      color: #2c3e50;
+    }
+    header {
+      background: #2980b9;
+      color: #fff;
+      padding: 20px 30px;
+    }
+    header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+    main { padding: 30px; max-width: 1100px; margin: 0 auto; }
+    .summary {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px 25px;
+      min-width: 180px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+    }
+    .card h2 { margin: 0; font-size: 22px; color: #2980b9; }
+    .card p  { margin: 5px 0 0; color: #7f8c8d; font-size: 14px; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+    }
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th { background: #2980b9; color: #fff; font-weight: 600; }
+    tr:nth-child(even) { background: #f2f6fa; }
+    tr:hover { background: #eaf2fa; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .empty {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      color: #7f8c8d;
+    }
+    footer {
+      text-align: center;
+      color: #95a5a6;
+      font-size: 13px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sales Dashboard</h1>
+  </header>
+
+  <main>
+    {% if rows %}
+    <div class="summary">
+      <div class="card">
+        <h2>{{ rows|length }}</h2>
+        <p>Total Orders</p>
+      </div>
+      <div class="card">
+        <h2>${{ '%.2f'|format(total_revenue) }}</h2>
+        <p>Total Revenue</p>
+      </div>
+      <div class="card">
+        <h2>${{ '%.2f'|format(avg_order) }}</h2>
+        <p>Average Order Value</p>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row.order_id }}</td>
+          <td>{{ row.customer }}</td>
+          <td>{{ row.product }}</td>
+          <td class="num">{{ row.quantity }}</td>
+          <td class="num">${{ '%.2f'|format(row.unit_price) }}</td>
+          <td class="num">${{ '%.2f'|format(row.total_amount) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">
+      No sales data found. Run the SQL Server cell in the notebook to load the
+      <strong>Sales</strong> table, then refresh this page.
+    </div>
+    {% endif %}
+  </main>
+
+  <footer>ETL Project &mdash; Flask + SQL Server Dashboard</footer>
+</body>
+</html>
